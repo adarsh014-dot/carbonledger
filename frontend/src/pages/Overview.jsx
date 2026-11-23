@@ -237,7 +237,7 @@ export function Overview({ onNavigate }) {
                 </>
               ) : position.error ? (
                 <QueryError error={position.error} />
-              ) : position.loading && !position.data ? (
+              ) : !position.data ? (
                 <div className="stack" style={{ gap: 10 }}>
                   <Skeleton height={40} />
                   <Skeleton height={40} />

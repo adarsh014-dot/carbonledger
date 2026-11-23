@@ -35,5 +35,10 @@ export function useQuery(fn, deps = [], { enabled = true } = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshKey, enabled, ...deps]);
 
-  return state;
+  // An enabled query without data and without an error is still loading. This
+  // covers the render between a dependency change (e.g. wallet hydration) and
+  // the effect that starts the fetch, which would otherwise expose data: null.
+  const loading = state.loading || (enabled && state.data === null && state.error === null);
+
+  return { ...state, loading };
 }
