@@ -2,7 +2,7 @@
 
 **Decentralized Carbon Credit Tracking, Trading and Retirement System**
 
-TE COMP Blockchain Mini-Project · Project #23 · Batch TE COMP 1 – C
+TE COMP Blockchain Mini-Project · Project #23
 
 CarbonLedger is a full-stack decentralized application (DApp) that manages the complete lifecycle of
 carbon credits: project registration, verifier approval, credit issuance, peer-to-peer trading and
@@ -294,15 +294,4 @@ role management rather than a full DAO.
 Solidity 0.8.24 · OpenZeppelin Contracts 5.x · Hardhat 2 · ethers.js v6 · React 18 · Vite 6 ·
 MetaMask · Sepolia · GitHub Actions
 
----
 
-## Team
-
-| | |
-| --- | --- |
-| Student 1 | Adarsh Maurya — 2414002 |
-| Student 2 | _to be confirmed_ |
-| Batch | TE COMP 1 – C |
-| Project | #23 — Decentralized Carbon Credit Tracking and Trading System |
-
-Submission details and abstract: **[SUBMISSION.md](SUBMISSION.md)**
