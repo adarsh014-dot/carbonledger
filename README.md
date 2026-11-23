@@ -14,7 +14,22 @@ contracts included).
 
 ![CarbonLedger dashboard](docs/screenshots/dashboard.png)
 
-_Local demo running against seeded Hardhat data._
+_Live on the Sepolia testnet with seeded demo data._
+
+
+## Live deployment (Sepolia)
+
+| Contract | Address |
+| --- | --- |
+| ProjectRegistry | [`0xAe2aDBB46c37E48AF2F30062F53FdBfffc87C007`](https://sepolia.etherscan.io/address/0xAe2aDBB46c37E48AF2F30062F53FdBfffc87C007) |
+| CarbonCreditToken (ERC-1155) | [`0xbD69c3Bc9E618aF87F575aE83Df99FbA97737AC9`](https://sepolia.etherscan.io/address/0xbD69c3Bc9E618aF87F575aE83Df99FbA97737AC9) |
+| RetirementCertificate (ERC-721) | [`0x33eF38395655284Fb63a6906a17C1e9b6C7ea27F`](https://sepolia.etherscan.io/address/0x33eF38395655284Fb63a6906a17C1e9b6C7ea27F) |
+| CarbonMarketplace | [`0x897d0A2E29feab3D6c59997D367432d0E382Df68`](https://sepolia.etherscan.io/address/0x897d0A2E29feab3D6c59997D367432d0E382Df68) |
+
+Deployer / admin / treasury: [`0xC6Cb39464733118Bcfc38f7ca80E09A8DFc963Ea`](https://sepolia.etherscan.io/address/0xC6Cb39464733118Bcfc38f7ca80E09A8DFc963Ea)
+
+The Sepolia deployment is already seeded with 5 projects (4 verified), 4 credit batches,
+2 retirement certificates and 2 marketplace listings. Connect MetaMask to Sepolia to interact.
 
 ---
 
