@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { formatEther } from "ethers";
 import { useWallet } from "../context/WalletContext";
+import { useRoles } from "../hooks/useRoles";
 import { useToast } from "../context/ToastContext";
 import { NETWORK, addressUrl, txUrl } from "../lib/chain";
 import { formatEth, shortAddress } from "../lib/format";
@@ -148,8 +149,10 @@ export function Layout({ page, onNavigate, children }) {
     error,
     expectedNetwork,
   } = useWallet();
+  const roles = useRoles();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const current = NAV.find((item) => item.key === page) || NAV[0];
+  const navItems = NAV.filter((item) => item.key !== "admin" || roles.admin);
+  const current = navItems.find((item) => item.key === page) || NAV[0];
 
   const navigate = (key) => {
     onNavigate(key);
@@ -189,7 +192,7 @@ export function Layout({ page, onNavigate, children }) {
 
         <div className="nav-group-label">Workspace</div>
         <nav className="nav" aria-label="Main navigation">
-          {NAV.map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             return (
               <button

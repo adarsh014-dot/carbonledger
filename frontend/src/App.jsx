@@ -4,6 +4,7 @@ import { Layout } from "./components/Layout";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { Button, Card, RoleNote } from "./components/ui";
 import { IS_CONFIGURED, NETWORK } from "./lib/chain";
+import { useRoles } from "./hooks/useRoles";
 import { Overview } from "./pages/Overview";
 import { Projects } from "./pages/Projects";
 import { Credits } from "./pages/Credits";
@@ -68,6 +69,7 @@ function SetupNotice() {
 export default function App() {
   const [page, setPage] = useState(readHash);
   const [creditsProject, setCreditsProject] = useState(null);
+  const roles = useRoles();
 
   useEffect(() => {
     const onHashChange = () => setPage(readHash());
@@ -110,8 +112,10 @@ export default function App() {
         <Certificates />
       ) : page === "activity" ? (
         <ActivityPage />
-      ) : (
+      ) : roles.admin ? (
         <Admin />
+      ) : (
+        <Overview onNavigate={navigate} />
       )}
       </ErrorBoundary>
     </Layout>
