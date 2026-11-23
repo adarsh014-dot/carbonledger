@@ -1,0 +1,38 @@
+# dependencies
+node_modules/
+frontend/node_modules/
+
+# hardhat
+artifacts/
+cache/
+typechain-types/
+coverage/
+coverage.json
+
+# env / secrets
+.env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+*.pem
+
+# frontend build
+frontend/dist/
+dist/
+
+# editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local deployments (keep sepolia)
+deployments/localhost.json

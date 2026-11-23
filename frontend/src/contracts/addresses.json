@@ -1,0 +1,10 @@
+{
+  "network": "unconfigured",
+  "chainId": 11155111,
+  "deploymentBlock": 0,
+  "deployedAt": null,
+  "ProjectRegistry": "0x0000000000000000000000000000000000000000",
+  "CarbonCreditToken": "0x0000000000000000000000000000000000000000",
+  "RetirementCertificate": "0x0000000000000000000000000000000000000000",
+  "CarbonMarketplace": "0x0000000000000000000000000000000000000000"
+}

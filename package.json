@@ -1,0 +1,29 @@
+{
+  "name": "carbon-credit-dapp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CarbonLedger - Decentralized Carbon Credit Tracking, Trading and Retirement System",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "node": "hardhat node",
+    "deploy:local": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "seed:local": "hardhat run scripts/seed.js --network localhost",
+    "seed:sepolia": "hardhat run scripts/seed.js --network sepolia",
+    "export": "node scripts/export-frontend.js",
+    "flatten": "node scripts/flatten.js",
+    "frontend": "npm --prefix frontend run dev",
+    "frontend:build": "npm --prefix frontend run build",
+    "frontend:install": "npm --prefix frontend install",
+    "verify:sepolia": "hardhat run scripts/verify.js --network sepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "dotenv": "^16.4.7",
+    "hardhat": "^2.26.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.4.0"
+  }
+}
