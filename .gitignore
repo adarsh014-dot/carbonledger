@@ -36,3 +36,8 @@ yarn-error.log*
 
 # local deployments (keep sepolia)
 deployments/localhost.json
+
+# local secret files
+PRIVATE_KEY.env
+*.key
+*.secret
