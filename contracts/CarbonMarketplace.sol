@@ -42,6 +42,7 @@ contract CarbonMarketplace is AccessControl, Pausable, ReentrancyGuard, IERC1155
     uint256 public feeBps;
 
     uint256 public listingCount;
+    uint256 public activeListings;
     uint256 public accruedFees;
 
     mapping(uint256 => Listing) private _listings;
@@ -111,6 +112,8 @@ contract CarbonMarketplace is AccessControl, Pausable, ReentrancyGuard, IERC1155
             createdAt: uint64(block.timestamp)
         });
 
+        activeListings++;
+
         credits.safeTransferFrom(msg.sender, address(this), batchId, amount, "");
 
         emit Listed(listingId, msg.sender, batchId, amount, pricePerTonne);
@@ -125,6 +128,7 @@ contract CarbonMarketplace is AccessControl, Pausable, ReentrancyGuard, IERC1155
         uint256 returned = listing.remaining;
         listing.remaining = 0;
         listing.active = false;
+        activeListings--;
 
         if (returned > 0) {
             credits.safeTransferFrom(address(this), msg.sender, listing.batchId, returned, "");
@@ -157,6 +161,7 @@ contract CarbonMarketplace is AccessControl, Pausable, ReentrancyGuard, IERC1155
         listing.remaining -= amount;
         if (listing.remaining == 0) {
             listing.active = false;
+            activeListings--;
         }
 
         uint256 fee = (totalPaid * feeBps) / BPS_DENOMINATOR;
@@ -256,10 +261,8 @@ contract CarbonMarketplace is AccessControl, Pausable, ReentrancyGuard, IERC1155
         }
     }
 
-    function activeListingCount() external view returns (uint256 count) {
-        for (uint256 i = 1; i <= listingCount; i++) {
-            if (_listings[i].active) count++;
-        }
+    function activeListingCount() external view returns (uint256) {
+        return activeListings;
     }
 
     // ---------------------------------------------------------------------

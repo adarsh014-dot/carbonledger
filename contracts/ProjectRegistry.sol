@@ -38,6 +38,7 @@ contract ProjectRegistry is AccessControl, Pausable {
     }
 
     uint256 public projectCount;
+    uint256 public verifiedActiveCount;
 
     mapping(uint256 => Project) private _projects;
     mapping(address => uint256[]) private _projectsByDeveloper;
@@ -130,6 +131,7 @@ contract ProjectRegistry is AccessControl, Pausable {
         project.verified = true;
         project.active = true;
         project.verifiedAt = uint64(block.timestamp);
+        verifiedActiveCount++;
 
         emit ProjectVerified(projectId, msg.sender, project.verifiedAt);
     }
@@ -143,6 +145,7 @@ contract ProjectRegistry is AccessControl, Pausable {
 
         project.verified = false;
         project.active = false;
+        verifiedActiveCount--;
 
         emit VerificationRevoked(projectId, msg.sender);
     }
@@ -157,6 +160,8 @@ contract ProjectRegistry is AccessControl, Pausable {
         require(project.active != active, "REG: status unchanged");
 
         project.active = active;
+        if (active) verifiedActiveCount++;
+        else verifiedActiveCount--;
         emit ProjectStatusChanged(projectId, active);
     }
 
@@ -223,10 +228,8 @@ contract ProjectRegistry is AccessControl, Pausable {
         return _projectsByDeveloper[developer];
     }
 
-    function getVerifiedProjectCount() external view returns (uint256 count) {
-        for (uint256 i = 1; i <= projectCount; i++) {
-            if (_projects[i].verified && _projects[i].active) count++;
-        }
+    function getVerifiedProjectCount() external view returns (uint256) {
+        return verifiedActiveCount;
     }
 
     // ---------------------------------------------------------------------

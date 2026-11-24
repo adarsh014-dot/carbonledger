@@ -5675,11 +5675,6 @@ library Strings {
 
 // Original license: SPDX_License_Identifier: MIT
 pragma solidity ^0.8.24;
-
-
-
-
-
 interface IProjectRegistry {
     function isVerified(uint256 projectId) external view returns (bool);
     function recordIssuance(uint256 projectId, uint256 tonnes) external;
