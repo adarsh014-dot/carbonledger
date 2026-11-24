@@ -239,20 +239,45 @@ contract RetirementCertificate is ERC721, AccessControl {
         return string(str);
     }
 
+    bytes private constant _HEX = "0123456789abcdef";
+
+    /// @dev Escape a string for embedding in the JSON metadata: quotes, backslashes
+    ///      and every control character (< 0x20), which would otherwise make the
+    ///      resulting JSON unparseable (e.g. a purpose containing a newline).
     function _escapeJSON(string memory input) internal pure returns (string memory) {
         bytes memory source = bytes(input);
-        bytes memory output = new bytes(source.length * 2);
+
+        // Count the exact output length first (no oversized buffer: each escaped
+        // quote/backslash costs 2 bytes, each control character \\u00XX costs 6).
+        uint256 length = source.length;
+        for (uint256 i = 0; i < source.length; i++) {
+            uint8 char = uint8(source[i]);
+            if (char == 0x22 || char == 0x5c) {
+                length += 1;
+            } else if (char < 0x20) {
+                length += 5;
+            }
+        }
+
+        bytes memory output = new bytes(length);
         uint256 j = 0;
         for (uint256 i = 0; i < source.length; i++) {
-            bytes1 char = source[i];
-            if (char == '"' || char == "\\") {
+            uint8 char = uint8(source[i]);
+            if (char == 0x22 || char == 0x5c) {
                 output[j++] = "\\";
+                output[j++] = source[i];
+            } else if (char < 0x20) {
+                output[j++] = "\\";
+                output[j++] = "u";
+                output[j++] = "0";
+                output[j++] = "0";
+                output[j++] = _HEX[char >> 4];
+                output[j++] = _HEX[char & 0x0f];
+            } else {
+                output[j++] = source[i];
             }
-            output[j++] = char;
         }
-        bytes memory trimmed = new bytes(j);
-        for (uint256 i = 0; i < j; i++) trimmed[i] = output[i];
-        return string(trimmed);
+        return string(output);
     }
 
     function _dateString(uint256 timestamp) internal pure returns (string memory) {

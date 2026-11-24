@@ -101,6 +101,20 @@ describe("CarbonLedger", function () {
       expect(await registry.projectCount()).to.equal(1n);
     });
 
+    it("keeps the verified project count correct across verify, revoke and re-verify", async function () {
+      const { registry, developer, verifier } = await loadFixture(deployFixture);
+      await registry.connect(developer).registerProject("Project A", "Goa", "Method A", hash("a"), 100);
+      await registry.connect(developer).registerProject("Project B", "Goa", "Method B", hash("b"), 100);
+      expect(await registry.getVerifiedProjectCount()).to.equal(0n);
+
+      await registry.connect(verifier).verifyProject(1);
+      await registry.connect(verifier).verifyProject(2);
+      expect(await registry.getVerifiedProjectCount()).to.equal(2n);
+
+      await registry.connect(verifier).revokeVerification(2);
+      expect(await registry.getVerifiedProjectCount()).to.equal(1n);
+    });
+
     it("rejects duplicate methodology documents", async function () {
       const { registry, developer, outsider, admin } = await loadFixture(deployFixture);
       const docHash = hash("same-document");
@@ -310,6 +324,21 @@ describe("CarbonLedger", function () {
       expect(json.image.startsWith("data:image/svg+xml;base64,")).to.equal(true);
     });
 
+    it("keeps metadata valid JSON when the purpose contains control characters", async function () {
+      const { token, certificate, admin, buyer } = await loadFixture(withBatchFixture);
+      await token
+        .connect(admin)
+        .retireCredits(1, 5, buyer.address, "Line one\nline two\ttabbed\"quoted\"");
+
+      const uri = await certificate.tokenURI(1);
+      const json = JSON.parse(
+        Buffer.from(uri.split(",")[1], "base64").toString("utf8")
+      );
+      const purpose = json.attributes.find((a) => a.trait_type === "Purpose").value;
+      expect(purpose).to.include("line two");
+      expect(purpose).to.include("quoted");
+    });
+
     it("transfers credits between accounts", async function () {
       const { token, admin, buyer } = await loadFixture(withBatchFixture);
       await token
@@ -440,6 +469,25 @@ describe("CarbonLedger", function () {
       await expect(marketplace.setFeeBps(1001)).to.be.revertedWith("MKT: fee above cap");
       await expect(marketplace.setFeeBps(500)).to.emit(marketplace, "FeeUpdated");
       expect(await marketplace.feeBps()).to.equal(500n);
+    });
+
+    it("keeps the active listing count correct across list, partial sale and cancel", async function () {
+      const { marketplace, admin, buyer } = await loadFixture(withListingFixture);
+      expect(await marketplace.activeListingCount()).to.equal(1n);
+
+      // a second listing from the remaining credits
+      await marketplace.connect(admin).listCredits(1, 400, ethers.parseEther("0.002"));
+      expect(await marketplace.activeListingCount()).to.equal(2n);
+
+      // partial fill: listing 1 stays active
+      await marketplace
+        .connect(buyer)
+        .buyCredits(1, 100, { value: ethers.parseEther("0.1") });
+      expect(await marketplace.activeListingCount()).to.equal(2n);
+
+      // cancel listing 2; listing 1 still active
+      await marketplace.connect(admin).cancelListing(2);
+      expect(await marketplace.activeListingCount()).to.equal(1n);
     });
 
     it("cannot list zero amounts or below balance", async function () {
